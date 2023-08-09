@@ -9,6 +9,7 @@ import BookDetails from '../Component/BookDetail'
 import BookCartQuantity from '../Component/BookCardQuantity'
 import AddressDetail from '../Component/BookOrder/AddressDetails'
 import MyCartData from '../Component/BookOrder/MyCardData'
+import OrderSummary from '../Component/BookOrder/OrderSummry'
 function Dashboard() {
   return (
     <div className='h-screen w-screen'>
@@ -21,7 +22,8 @@ function Dashboard() {
       {/* <BookCartQuantity/> */}
       {/* <MyCart/> */}
       {/* <AddressDetail/> */}
-      <MyCartData/>
+      {/* <MyCartData/> */}
+      <OrderSummary/>
       {/* <Footer/> */}
     </div>
   )
