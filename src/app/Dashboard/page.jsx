@@ -7,6 +7,7 @@ import BookAppBar2 from '../Component/AppBar2'
 import ForgotPassword from '../Component/ForgotPassword'
 import BookDetails from '../Component/BookDetail'
 import BookCartQuantity from '../Component/BookCardQuantity'
+import AddressDetail from '../Component/BookOrder/AddressDetails'
 function Dashboard() {
   return (
     <div className='h-screen w-screen'>
@@ -16,7 +17,9 @@ function Dashboard() {
       {/* <Book/> */}
       {/* <ForgotPassword/> */}
       {/* <BookDetails/> */}
-      <BookCartQuantity/>
+      {/* <BookCartQuantity/> */}
+      {/* <MyCart/> */}
+      <AddressDetail/>
       {/* <Footer/> */}
     </div>
   )
