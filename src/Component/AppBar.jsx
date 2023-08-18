@@ -1,6 +1,6 @@
 "use client"
 import React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled} from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,16 +10,15 @@ import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import { BorderColor } from '@mui/icons-material';
-import { TextField } from '@mui/material';
 import PersonIcon from '@mui/icons-material/PersonOutlineOutlined';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie'
+// import { Cookie } from 'next/font/google';
+import { deleteCookie } from 'cookies-next';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -30,7 +29,7 @@ const Search = styled('div')(({ theme }) => ({
   width: '100%',
   [theme.breakpoints.up('sm')]: {
     marginLeft: theme.spacing(3),
-    width: 'auto',
+    width: '580px',
   },
 }));
 
@@ -59,7 +58,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function BookAppBar() {
+ 
+
+export default function BookAppBar({ setSearchBook }) {
+// Log Out 
+const router = useRouter();
+const logOut=()=>{
+  // Cookies.remove('token');
+  deleteCookie('token')
+  localStorage.removeItem('token')
+  router.push('/')
+}
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -101,7 +111,11 @@ export default function BookAppBar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}><Link href={'/Dashboard/MyCart'}>My Card</Link> </MenuItem>
+      <MenuItem onClick={handleMenuClose}>Setting</MenuItem>
+      <MenuItem onClick={handleMenuClose}><Link href={'/Dashboard/WishList'}>WishList</Link></MenuItem>
+      <MenuItem onClick={()=>{logOut(),handleMenuClose()}}>Log Out</MenuItem>
+
     </Menu>
   );
 
@@ -122,14 +136,7 @@ export default function BookAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon sx={{ height: '15px', width: '15px' }} />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
+     
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
@@ -138,17 +145,25 @@ export default function BookAppBar() {
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircle sx={{ height: '15px', width: '15px' }} />
+          <PersonIcon sx={{ height: '15px', width: '15px' }} />
         </IconButton>
         <p>Profile</p>
+      </MenuItem>
+      <MenuItem>
+        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+          <Badge badgeContent={4} color="error">
+          <ShoppingCartIcon sx={{ height: '15px', width: '15px' }}/>
+          </Badge>
+        </IconButton>
+        <p>Cart</p>
       </MenuItem>
     </Menu>
   );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ bgcolor: '#8F2B2F', height: '24' }}  >
-        <Toolbar>
+      <AppBar className='w-[1366px] h-[60px] bg-red-800' >
+        <Toolbar className='bg-red-800'>
           {/* bookicon */}
           <IconButton
             size="small"
@@ -169,12 +184,13 @@ export default function BookAppBar() {
             BookStore
           </Typography>
           {/* search bar */}
-          <Search sx={{ width: '' }}>
+          <Search className='w-[490px] w-[33px]'>
             <SearchIconWrapper>
               <SearchIcon sx={{ color: '#818181' }} />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
+              onChange={(event) => setSearchBook(event.target.value)}
               inputProps={{ 'aria-label': 'search' }}
               sx={{ color: '#818181' }}
             />
@@ -182,7 +198,6 @@ export default function BookAppBar() {
           {/* profile and card */}
           <Box sx={{
             display: { xs: 'none', md: 'flex', justifyContent: 'space-between' },
-            // border: 2, borderColor: '#ffffff',
             ml: 22, width: 120
           }}>
             {/* profile  */}
@@ -194,10 +209,8 @@ export default function BookAppBar() {
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               sx={{
-                borderRadius: '0', // Set border radius to zero for a square shape
-                height: '30px', // Set the height to the desired size (for example, 40px for a 40x40 square)
-                // border: 2,
-                // borderColor: '#ffffff',
+                borderRadius: '0',
+                height: '30px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
@@ -211,25 +224,25 @@ export default function BookAppBar() {
             </IconButton>
 
             {/* card  */}
-            <IconButton
-              size="large"
-              color="inherit"
-              sx={{
-                borderRadius: '0', // Set border radius to zero for a square shape
-                height: '30px', // Set the height to the desired size (for example, 40px for a 40x40 square)
-                // border: 2,
-                // borderColor: '#ffffff',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <ShoppingCartIcon />
-              <p style={{ fontSize: '10px', fontWeight: 'light' }}>
-                Card
-              </p>
-            </IconButton>
+            <Link href='/Dashboard/MyCart'>
+              <IconButton
+                size="large"
+                color="inherit"
+                sx={{
+                  borderRadius: '0',
+                  height: '30px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <ShoppingCartIcon />
+                <p style={{ fontSize: '10px', fontWeight: 'light' }}>
+                  Cart
+                </p>
+              </IconButton>
+            </Link>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton

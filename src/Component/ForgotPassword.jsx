@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 import TextField from '@mui/material/TextField';
-import { login } from '@/Services/UserServices';
+import { login } from '../Services/UserServices';
 import BookAppBar2 from './AppBar2';
 
 
@@ -50,10 +50,10 @@ function ForgotPassword({ signProps }) {
     return (
         <div className='w-[100vw] h-[100vh]'>
             <BookAppBar2 />
-            <div className='h-[80%] w-full flex flex-col items-center justify-center relative  '>
+            <div className='h-[80%] w-full flex flex-col items-center justify-center relative border-2 border-slate-700 '>
                 <h2 className='absolute top-12 font-bold text-2xl'>Forgot Password</h2>
                 {/* rightside */}
-                <div className='h-[45vh] w-[30vw] flex flex-col justify-center items-center shadow-sm shadow-slate-700'>
+                <div className='h-[45vh] w-[80vw]  sm:w-[40vw] flex flex-col justify-center items-center shadow-sm shadow-slate-700'>
                     <div className='h-[70%] w-full px-10 py-5'>
                         <div class="h-full w-[100%]">
                             <form class="space-y-2" action="#" method="POST">
@@ -84,7 +84,7 @@ function ForgotPassword({ signProps }) {
                             </form>
                         </div>
                     </div>
-                    <div className='bg-slate-200 w-full h-[30%] flex justify-center items-center font-bold '>CREATE ACCOUNT</div>
+                    <div className='bg-slate-200 w-full h-[30%] flex justify-center items-center font-bold' onClick={goToSignUp}>CREATE ACCOUNT</div>
                    
                 </div >
             </div >

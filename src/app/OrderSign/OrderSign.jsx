@@ -16,18 +16,17 @@ function OrderSign() {
         setToggle(true)
     }
        // Check if a token is present in local storage
-       const token = localStorage.getItem('token');
-       console.log("token "+token)
     return (
         <div>
-            { 
+            {/* { 
             !token ?(
                 toggle ? <Login signProps={signProps}/>:<SignUp loginProps={loginProps}/>
                 // toggle ? <LogIn checkLogin={checkLogin} /> : <SignUp checkSignup={checkSignup} />
             ):(
                 <Dashboard/>
             )
-            }
+            } */}
+            <Dashboard/>
         </div>
     )
 }

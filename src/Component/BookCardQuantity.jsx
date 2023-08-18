@@ -1,6 +1,6 @@
+"use client"
 import React from 'react'
-// import "./BookCartQuantity.css"
-import { removeCartItem, modifyCartItem} from '../../Services/DataServices'
+import { removeCartItem, modifyCartItem} from '../Services/DataServices'
 import AddCircleIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 
@@ -25,11 +25,12 @@ function BookCartQuantity({ setAddToBagToggle, bookObj, getCartItemsAndUpdte }) 
         }
 
         let response = await modifyCartItem(bookObj._id, count)
-        //console.log(response)
+        console.log(response)
         getCartItemsAndUpdte()
     };
 
     const removeItem = async () => {
+        console.log(bookObj._id)
         let response = await removeCartItem(bookObj._id)
         setAddToBagToggle(true)
         console.log(response)
@@ -38,13 +39,10 @@ function BookCartQuantity({ setAddToBagToggle, bookObj, getCartItemsAndUpdte }) 
     return (
 
         <div className='flex justify-around items-center w-[110px] h-[35px]'>
-            {/* <button className='flex items-center justify-center w-[20%] h-[60%] border-2 border-slate-900' onClick={() => { calculateQuantity("Minus") }}></button> */}
             <RemoveCircleIcon className='text-slate-500' onClick={() => { calculateQuantity("Minus") }}/>
             <div className='flex items-center justify-center w-[40%] h-[75%] text-sm bg-slate-100  border-2 border-slate-400' >
-                {/* {bookObj.quantityToBuy} */}
-                23
+                {bookObj.quantityToBuy}
                 </div>
-            {/* <button className='flex justify-center items-center w-[20%] h-[60%] border-2 border-slate-900'  onClick={() => { calculateQuantity("Plus") }}>@</button> */}
             <AddCircleIcon className='text-slate-500' onClick={() => { calculateQuantity("Plus") }}/>
         </div>
 

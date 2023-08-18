@@ -1,4 +1,4 @@
-
+"use client"
 import React, { useState } from 'react'
 import { Grid, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -8,7 +8,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { userAddress } from '../../../Services/DataServices';
+import { userAddress } from '../../Services/DataServices';
 import { Bungee_Shade } from 'next/font/google';
 
 const Item = styled(Box)(({ theme }) => ({
@@ -22,13 +22,12 @@ const citystate_Regex = /(^[A-Za-z]{2,})/;
 
 function AddressDetail({ setSummaryToggle, summaryToggle }) {
 
-    const [AdrsObj, setAdrsObj] = useState({ addressType: "", fullAddress: "", city: "", state: "" });
+    const [AdrsInt, setAdrsObj] = useState({ addressType: "", fullAddress: "", city: "", state: "" });
     const [errObj, setErrObj] = useState({
         cityError: false,
         cityHelper: "",
         stateError: false,
         stateHelper: "",
-
     });
 
 
@@ -51,8 +50,8 @@ function AddressDetail({ setSummaryToggle, summaryToggle }) {
 
 
     const Submit = async () => {
-        let cityTest = citystate_Regex.test(AdrsObj.city);
-        let stateTest = citystate_Regex.test(AdrsObj.state);
+        let cityTest = citystate_Regex.test(AdrsInt.city);
+        let stateTest = citystate_Regex.test(AdrsInt.state);
 
         if (cityTest === false) {
             setErrObj((prevState) => ({
@@ -81,8 +80,9 @@ function AddressDetail({ setSummaryToggle, summaryToggle }) {
                 stateHelper: "",
             }));
         }
+        console.log(AdrsInt)
         if (cityTest === true && stateTest === true) {
-            let response = await userAddress(AdrsObj);
+            let response = await userAddress(AdrsInt);
             console.log(response);
             setSummaryToggle(true);
 
@@ -92,20 +92,18 @@ function AddressDetail({ setSummaryToggle, summaryToggle }) {
 
 
     return (
-        <Grid container-fulid   className='p-[30px] w-[50vw] mx-auto shadow-sm shadow-slate-800'>
-            <Item
-                className='flex justify-start items-start h-8 mb-8'
-                xs={12} sm={6} md={4} lg={3}>
-                <div className='text-slate-800 text-xl font-semibold'>Customer Details</div>
+        <Grid className='w-[770px] h-[450px] pt-[20px] pl-[36px] pr-[34px] shadow-sm shadow-slate-800'>
+            <Item className='flex justify-between items-start h-8 mb-8' xs={12} sm={6} md={4} lg={3}>
+                <div className='text-slate-800 text-[18px] font-semibold'>Customer Details</div>
+                {
+                    summaryToggle?" ": <div className='h-[35px] w-[150px] flex justify-center items-center shadow-sm  shadow-red-400 text-red-400 text-xs rounded-sm '><button >Add New Address</button></div>
+                } 
             </Item>
-            <div className='w-[70%] flex flex-col ml-6 w-[90%] '>
+            <div className='w-[512px] flex flex-col ml-6 '>
                 <Grid container className='flex w-full justify-between items-center text-slate-800 py-2 ' >
-
-                    <Item  xs={12} sm={6} md={4} lg={3}>
-
+                    <Item xs={12} sm={6} md={4} lg={3}>
                         <TextField
-                            fullWidth
-                            id="fullWidth1"
+                            sx={{ height: '45px', width: '251px' }}
                             type={'text'}
                             label="Full Name"
                             variant="outlined"
@@ -114,40 +112,31 @@ function AddressDetail({ setSummaryToggle, summaryToggle }) {
                         />
                     </Item>
                     <Item xs={12} sm={6} md={4} lg={3}>
-
                         <TextField
-                            fullWidth
-                            id="fullwidth2"
-                            type={'number'}
+                            sx={{ height: '45px', width: '251px' }}
+                            type={'tel'}
                             label="Mobile Number"
                             variant="outlined"
                             required
                             size='small'
                         />
                     </Item>
-
-
                 </Grid>
                 <Item className='flex w-full justify-between items-center text-slate-800' xs={12} sm={6} md={4} lg={3}>
-                        <TextField
-                            fullWidth
-                            id="fullWidth1"
-                            type={'text'}
-                            label="Address"
-                            variant="outlined"
-                            required
-                            size='large'
-                            onChange={takeAddress}
-
-                        />               
+                    <TextField
+                        fullWidth
+                        type={'text'}
+                        label="Address"
+                        variant="outlined"
+                        required
+                        size='large'
+                        onChange={takeAddress}
+                    />
                 </Item>
                 <Grid container className='flex w-full justify-between items-center text-slate-800 py-2 ' >
-
-                    <Item  xs={12} sm={6} md={4} lg={3}>
-
+                    <Item xs={12} sm={6} md={4} lg={3}>
                         <TextField
-                            fullWidth
-                            id="fullWidth1"
+                            sx={{ height: '45px', width: '251px' }}
                             type={'text'}
                             label="City/Town"
                             variant="outlined"
@@ -156,14 +145,11 @@ function AddressDetail({ setSummaryToggle, summaryToggle }) {
                             onChange={takeCity}
                             error={errObj.cityError}
                             helperText={errObj.cityHelper}
-
                         />
                     </Item>
-                    <Item  xs={12} sm={6} md={4} lg={3}>
-
+                    <Item xs={12} sm={6} md={4} lg={3}>
                         <TextField
-                            fullWidth
-                            id="fullwidth2"
+                            sx={{ height: '45px', width: '251px' }}
                             type={'text'}
                             label="State"
                             variant="outlined"
@@ -174,11 +160,9 @@ function AddressDetail({ setSummaryToggle, summaryToggle }) {
                             helperText={errObj.stateHelper}
                         />
                     </Item>
-
-
                 </Grid>
                 {/* type */}
-                <Item className='flex w-[70%] justify-between items-center text-slate-800' xs={12} sm={6} md={4} lg={3}>
+                <Item className='flex w-[375px] justify-between items-center text-slate-800' xs={12} sm={6} md={4} lg={3}>
                     <FormControl className='flex flex-col w-full'>
                         <FormLabel className='text-slate-900'>Type</FormLabel>
                         <RadioGroup
@@ -195,6 +179,12 @@ function AddressDetail({ setSummaryToggle, summaryToggle }) {
                     </FormControl>
                 </Item>
             </div>
+            <Item className='w-full flex justify-end items-center h-8 mb-8' xs={12} sm={6} md={4} lg={3}>
+                {
+                    summaryToggle ? " " :
+                        <div className='h-[35px] w-[150px] flex justify-center items-center bg-blue-500 border-none text-white text-sm rounded-sm '><button onClick={() => Submit()}>CONTINUE</button></div>
+                }
+            </Item>
         </Grid>
 
     )

@@ -7,15 +7,23 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import IconButton from '@mui/material/IconButton';
 import { login } from '@/Services/UserServices';
 
+import Cookies from 'js-cookie'
+import { useRouter } from 'next/navigation';
+import { setCookie } from 'cookies-next'
+
+
+
 
 const emailRegex = /^[a-z]{3,}(.[0-9a-z]*)?@([a-z]){2,}.[a-z]*$/;
 const passwordRegex = /^.*(?=.{8,})(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&+=]).*$/;
 
 function Login({ signProps }) {
+const router=useRouter()
   const goToSignUp = () => {
-    console.log("ready to switch")
-    signProps()
-}
+    // console.log("ready to switch")
+    // signProps()
+    router.push('/SignUp')
+  }
   const [inputData, setLInputData] = React.useState({ email: "", password: "" });
   const [errorObj, setErrorObj] = React.useState({
     emailError: false,
@@ -61,52 +69,71 @@ function Login({ signProps }) {
         passwordHelper: "",
       }));
     }
-console.log(inputData)
+    console.log(inputData)
     if (emailTest === true && passwordTest === true) {
-      let response = await login(inputData);
-      console.log(response);
-      localStorage.setItem("token", response.data.id);
+      try {
+        let response = await login(inputData);
+        console.log("response")
+        console.log(response);
+        const accessToken = response.data.result.accessToken;
+        // cookies 
+        setCookie('token', accessToken)
+        // Store the access token in local storage
+        // console.log(ls)
+        localStorage.setItem("token", accessToken);
+        // console.log("hii")
+        // // route 
+        // const router = useRouter();
+        // // NextResponse.redirect("http://localhost:3000/Dashboard")
+        // router.push('http://localhost:3000/Dashboard');
 
-      // localStorage.setItem("token", response.data.result.accessToken);
-       // Check if a token is present in local storage
-       const token = localStorage.getItem('token');
-       console.log(token)
-       if (token) {
-         // Display an alert
-         alert('You have log in successfully! .');
-         // Redirect to the login page
-       }
+
+
+        logIn();
+
+      } catch (error) {
+        console.error("Error storing token in localStorage:", error);
+      }
 
     }
   }
   const [show, setShow] = React.useState(true)
+  // log in cookies 
+
+const logIn=()=>{
+  console.log("Log in")
+  router.push('/Dashboard')
+}
+
+
+
   return (
     <div className='w-[100vw] h-[100vh] flex justify-center items-center bg-slate-400'>
-      <div className='h-[425px] w-[727px] flex items-center  '>
+      <div className='h-[425px] w-[727px] flex items-center justify-center md:justify-start'>
         {/* leftside */}
-        <div className='h-[95%]  w-[45%] bg-slate-200 rounded-l-md flex justify-center items-center'>
+        <div className='md:h-[95%] md:w-[45%] md:flex bg-slate-200 rounded-l-md flex justify-center items-center hidden h-0 w-0 '>
           <img src="2766594.png" alt="" className='bg-transparent h-[245px] w-[245px] rounded-full' />
         </div>
         {/* rightside */}
-        <div className='h-[100%] w-[55%] right-0 bg-white relative rounded-lg  px-14 py-6'>
+        <div className='h-[100%] w-[75%] md:w-[55%] right-0 bg-white relative rounded-lg  px-14 py-6'>
           {/* title  */}
           <div className='h-[12%] w-[100%] flex  justify-between items-center sm:mx-auto sm:w-full sm:max-w-sm '>
             {/* login  */}
             <div className='h-full  flex flex-col justify-center items-center '>
-              <h2 class="text-center text-2xl font-bold leading-2 tracking-tight text-gray-900">LOGIN</h2>
+              <h2 className="text-center text-2xl font-bold leading-2 tracking-tight text-gray-900">LOGIN</h2>
               <div className='w-5 border-2 border-red-900 rounded-md '></div>
             </div>
             {/* signup  */}
-            <a className='h-full w-[40%]  flex justify-center items-center' onClick={goToSignUp}  href='SignUp'>
-              <h2 class="text-center text-2xl  font-bold leading-2 tracking-tight text-gray-900">SIGNUP</h2>
+            <a className='h-full w-[40%]  flex justify-center items-center' onClick={goToSignUp} href='SignUp'>
+              <h2 className="text-center text-2xl  font-bold leading-2 tracking-tight text-gray-900">SIGNUP</h2>
             </a>
           </div>
           {/* tailwind */}
-          <div class=" h-[80%] w-[100%]">
-            <form class="space-y-2" action="#" method="POST">
+          <div className=" h-[80%] w-[100%]">
+            <form className="space-y-2" action="#" method="POST">
               {/* email  */}
               <div>
-                <label for="email" class="block text-xs font-medium leading-6 text-gray-900">Email address</label>
+                <label htmlFor="email" className="block text-xs font-medium leading-6 text-gray-900">Email address</label>
                 <div>
                   <TextField
                     fullWidth
@@ -122,8 +149,8 @@ console.log(inputData)
               </div>
               {/* password  */}
               <div >
-                <div class="flex items-center">
-                  <label for="password" class="block text-xs font-medium leading-2 text-gray-900">Password</label>
+                <div className="flex items-center">
+                  <label htmlFor="password" className="block text-xs font-medium leading-2 text-gray-900">Password</label>
                 </div>
                 <div className="top-0">
                   <OutlinedInput
@@ -132,7 +159,7 @@ console.log(inputData)
                     onChange={takePassword}
                     error={errorObj.passwordError}
                     helpertext={errorObj.passwordHelper}
-                    type={show ? 'password':'text'}
+                    type={show ? 'password' : 'text'}
                     endAdornment={
                       <IconButton
                         aria-label="toggle password visibility"
@@ -153,7 +180,7 @@ console.log(inputData)
               </div>
               {/* submit  */}
               <div>
-                <button type="submit" class="flex w-full justify-center rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold leading-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={submit}>Login</button>
+                <button type="submit" className="flex w-full justify-center rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold leading-2 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={submit}>Login</button>
               </div>
               {/* or */}
               <div className='h-14 w-full  flex justify-between items-center '>
@@ -167,11 +194,11 @@ console.log(inputData)
                   items-center sm:mx-auto sm:w-full sm:max-w-sm '>
                 {/* login  */}
                 <button className='border-none h-full w-[48%] rounded-md bg-indigo-600 border-2 border-yellow-400 flex justify-center items-center '>
-                  <h2 class="text-center text-sm text-white leading-9 tracking-tight text-gray-900">Facebook</h2>
+                  <h2 className="text-center text-sm text-white leading-9 tracking-tight text-gray-900">Facebook</h2>
                 </button>
                 {/* signup  */}
                 <button className='h-full w-[48%] rounded-md flex justify-center items-center bg-slate-200 '>
-                  <h2 class="text-center text-  leading-9 tracking-tight text-gray-900">Google</h2>
+                  <h2 className="text-center text-  leading-9 tracking-tight text-gray-900">Google</h2>
                 </button>
               </div>
             </form>

@@ -1,5 +1,6 @@
+"use client"
 import React, { useEffect, useState } from 'react'
-import { getBooks } from '@/Services/DataServices';
+import { getBooks } from '../Services/DataServices';
 import BookCart from './BookCard';
 
 import { Grid, Box, AppBar } from '@mui/material';
@@ -7,6 +8,7 @@ import { styled } from '@mui/material/styles';
 import Footer from './Footer';
 import Pagination from '@mui/material/Pagination';
 import BookAppBar from './AppBar';
+import BookDetails from './BookDetail';
 
 
 const Item = styled(Box)(({ theme }) => ({
@@ -20,6 +22,7 @@ function Book() {
     const [book, setbook] = useState([])
     const [toggle, setToggle] = useState(true)
     const [bookInfo, setBookInfo] = useState()
+    const [booksCount, setBooksCount] = useState(0)
     const [numOfPages, setNumOfPages] = useState(0)
     const [bookLimit, setBookLimit] = useState(8)
     const [searchBook, setSearchBook] = useState("");
@@ -28,8 +31,8 @@ function Book() {
 
     const loaddata = async () => {
         let response = await getBooks()
-        console.log(response)
         let arr = response.data.result;
+        setBooksCount(arr.length)
         let num = Math.ceil(arr?.length / 8);
         setNumOfPages(num)
         setbook(arr.slice(0, bookLimit))
@@ -66,27 +69,26 @@ function Book() {
     const bookData = (data) => {
         setBookInfo(data)
     }
-
     return (
-        <Grid sx={{ display: 'flex', flexDirection: 'column' }} className='w-[100%] h-full items-center' >
+        <Grid sx={{ display: 'flex', flexDirection: 'column' }} className='w-[1345px] items-center' >
 
-            <Item className='w-[100%]' xs={12} sm={6} md={4} lg={3}>
+            {/* <Item className='w-[100%]' xs={12} sm={6} md={4} lg={3}>
                 <BookAppBar setSearchBook={setSearchBook} />
-            </Item>
-            <Item className='w-[70%] mt-4'>
+            </Item> */}
+            <Item className='w-[70%] mt-[80px]'>
 
                 {
                     toggle ?
-                        <div className=' w-full h-[80vh] flex flex-col items-center'>
-                            <div className='h-10 w-full flex justify-between items-center'>
-                                <div className='flex justify-between items-center w-28'>
-                                    <h2 className='font-bold text-xl text-slate-800'>Books</h2>
-                                    <p className='text-sm text-slate-400'>Count</p>
+                        <div className=' w-full h-[80%] flex flex-col items-center'>
+                            <div className='h-[33px] w-full flex justify-between items-center'>
+                                <div className='flex justify-between items-center w-42'>
+                                    <h2 className='font-bold text-[25px] flex items-bottom text-slate-800'>Books </h2>
+                                    <p className='text-[12px] h-[16px] text-slate-400'> ({booksCount} items)</p>
                                 </div>
                                 <button className='h-[80%] w-32 flex justify-center items-center shadow-sm shadow-slate-500'>sort by relevance</button>
                             </div>
-                            <div className='h-[80%] w-[100%] flex flex-col justify-between items-center items-start  mt-[10px]'>
-                                <Grid className='grid' container spacing={2} >
+                            <div className='flex flex-col justify-between items-center items-start  mt-[10px]'>
+                                <Grid className='grid' container spacing={2}  >
 
                                     {
                                         filterToggle ? filterData.map((bookobj) => (<BookCart setToggle={setToggle} bookData={bookData} bookobj={bookobj} />))
@@ -102,9 +104,9 @@ function Book() {
                         <BookDetails setToggle={setToggle} bookInfo={bookInfo} />
                 }
             </Item>
-            <Item sx={{ width: '100%' }} xs={12} sm={6} md={4} lg={3}>
+            {/* <Item sx={{ width: '100%' }} xs={12} sm={6} md={4} lg={3}>
                 <Footer />
-            </Item>
+            </Item> */}
         </Grid>
     )
 }
